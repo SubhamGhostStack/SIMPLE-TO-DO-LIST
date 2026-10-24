@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background: linear-gradient(#38bdf8,royalblue);
+            font-weight: 900;
+            font-family: Arial, Helvetica, sans-serif;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.5;
+        }
+        .main{
+            width: 600px;
+            border: 5px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 50px;
+            line-height: 2;
+            border-top-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            padding-bottom: 10px;
+        }
+        h1{
+            font-size: 50px;
+        }
+        .inp{
+            width: 300px;
+            height: 40px;
+             border-top-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            border-color: black;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        button{
+            width: 100px;
+            height: 40px;
+          border-radius: 10px;
+          border-color: black;
+          margin-top: 10px;
+          font-weight: 900;
+          margin-left: 5px;
+            border-top-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+        li{
+           
+            width: 400px;
+            justify-content: space-between;
+            
+            border: 3px solid black;
+            margin-top: 1px;
+           
+            font-size: 20px;
+            overflow-wrap: anywhere;
+             border-top-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+        button:hover{
+            background: black;
+            color: royalblue;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>TO DO LIST 📝</h1>
+        <div class="inp-section">
+        <input class="inp" type="text" placeholder="Enter Your Task ✍">
+        <button class="btn">ADD  ➕</button>
+        </div>
+        <div class="ol-section">
+        <ol class="ol"></ol>
+        </div>
+    </div>
+    <script>
+        let inp=document.querySelector(".inp");
+        let ol=document.querySelector(".ol");
+        let btn=document.querySelector(".btn");
+        let data=JSON.parse(localStorage.getItem("tasks")) ||[];
+        console.log(data)
+
+        //save karne ke liye function
+        function save(){
+          localStorage.setItem("tasks",JSON.stringify(data));
+            
+            show();
+        }
+        // data show karne ke liye
+        function show(){
+            ol.innerHTML="";
+            for(let i=0;i<data.length;i++){
+                let li=document.createElement("li");
+                li.textContent=data[i] +"";
+
+                // edit button banane ke liye
+                let edit=document.createElement("button");
+                edit.textContent="EDIT ✏️";
+                edit.addEventListener("click",function(){
+                    let n=prompt("Edit Your Task", data[i]);
+                     if (n && n.trim()) data[i] = n.trim();
+                    save();
+                })
+                //delete button ke liye
+                let del=document.createElement("button");
+                del.textContent="DELETE ✖️";
+                del.addEventListener("click",function(){
+                    let confm=confirm("are you really want to delete data");
+                    if(confm){
+                    data.splice(i,1);
+                    save();
+                    }
+                    else{
+                        return;
+                    }
+                })
+                li.append(edit,del);
+                ol.appendChild(li);
+            }
+        }
+        //add button click hone pae evenet
+
+        btn.addEventListener("click",function(){
+            if(inp.value==""){
+                alert("please write something then click add button");
+                return;
+            }
+            if(!inp.value.trim()) return;
+            
+        data.push(inp.value.trim());
+        inp.value="";
+        save();
+        })
+        show();
+    </script>
+</body>
+</html>
